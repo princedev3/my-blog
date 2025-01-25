@@ -23,6 +23,7 @@ export const createComment = async (
     return { success: comments };
   } catch (error) {
     console.log(error);
+
     return { error: "can not create comment" };
   }
 };
