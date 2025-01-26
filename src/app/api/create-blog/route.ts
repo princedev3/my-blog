@@ -3,9 +3,9 @@ import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloud } from "cloudinary";
 import streamifier from "streamifier";
-import Cors from "nextjs-cors";
+
 const headers = {
-  "Access-Control-Allow-Origin": "*", // Allow all origins (use specific origin in production for security)
+  "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
 };
