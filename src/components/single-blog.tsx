@@ -3,14 +3,15 @@ import { Blog, Comment } from "@prisma/client";
 import Image from "next/image";
 import React, { useState } from "react";
 import { Badge } from "./ui/badge";
-import { ThumbsUp, Trash } from "lucide-react";
+import { ThumbsUp, Trash, Trash2 } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useSessionStore } from "./store/user-session";
 import { createComment } from "@/blog-actions/create-comment";
 import { addLikeAction } from "@/blog-actions/add-like";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { deleteComment } from "@/blog-actions/delete-comment";
+import { deleteBlog } from "@/blog-actions/delete-blog";
 
 type blogProp = Blog & {
   _count: { like: number };
@@ -29,6 +30,7 @@ const SingleBlog = ({
   const [selectedImage, setSelectedImage] = useState(0);
   const [comments, setComments] = useState<string>("");
   const pathname = usePathname();
+  const router = useRouter();
 
   const handleCreateComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -55,6 +57,17 @@ const SingleBlog = ({
   const handleDeleteComment = async (id: string, userId: string) => {
     await deleteComment(id, userId, pathname);
   };
+
+  const handledelete = async () => {
+    const res = await deleteBlog(
+      singleblog?.id as string,
+      session?.user?.id as string
+    );
+
+    if (res.status === 200) {
+      router.push("/");
+    }
+  };
   return (
     <div className="mt-4">
       <div className="grid md:grid-flow-col  md:grid-cols-[2fr_1fr]  gap-4 ">
@@ -67,6 +80,12 @@ const SingleBlog = ({
           />
           <Badge className="z-30 absolute top-3 left-3">
             {singleblog?.category}{" "}
+            {session?.user?.id === singleblog?.userId && (
+              <Trash2
+                onClick={handledelete}
+                className="ml-2 cursor-pointer w-[14px] h-[14px]  "
+              />
+            )}
           </Badge>
         </div>
         <div className=" ">
@@ -102,7 +121,7 @@ const SingleBlog = ({
           className="flex items-center gap-1 my-2 cursor-pointer"
           onClick={handleLikeAction}
         >
-          <ThumbsUp className="w-4 h-4 text-gray-700 fill-black" />
+          <ThumbsUp className="w-4 h-4 text-gray-700 " />
           <span className="text-gray-700">{singleblog?._count.like} </span>
         </div>
         <div className="grid  gap-y-5 my-2">
