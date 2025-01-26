@@ -7,6 +7,7 @@ import { MoveRight, ThumbsUp } from "lucide-react";
 // import { Blog } from "@prisma/client";
 import { useSessionStore } from "./store/user-session";
 import { addLikeAction } from "@/blog-actions/add-like";
+import NoPost from "./no-post";
 
 type Blog = {
   id: string;
@@ -32,7 +33,7 @@ const ShowBlog = ({
   const session = useSessionStore((state) => state.session);
 
   if (allBlogs?.length === 0) {
-    return <div className=" mt-3 text-2xl font-semibold text-blue-950"></div>;
+    return <NoPost />;
   }
 
   const addLike = async (id: string) => {

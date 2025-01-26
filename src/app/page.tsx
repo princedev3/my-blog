@@ -1,4 +1,5 @@
 import { getPosts } from "@/blog-actions/get-blog";
+import NoPost from "@/components/no-post";
 import { PaginationWithLinks } from "@/components/pagination-with-link";
 import ShowBlog from "@/components/show-blog";
 export const dynamic = "force-dynamic";
@@ -17,11 +18,13 @@ export default async function Home({ searchParams }: PageProps) {
   return (
     <div className="w-full">
       <ShowBlog allBlogs={post as []} pathName="/" />
-      <PaginationWithLinks
-        pageSize={4}
-        page={parseInt((page as string) || "1")}
-        totalCount={count as number}
-      />
+      {post?.length && (
+        <PaginationWithLinks
+          pageSize={4}
+          page={parseInt((page as string) || "1")}
+          totalCount={count as number}
+        />
+      )}
     </div>
   );
 }
