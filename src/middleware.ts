@@ -13,6 +13,12 @@ export default middleware(async (req) => {
 
     const email = isLoggedIn?.user?.email;
 
+    const MAX_BODY_SIZE = 10 * 1024 * 1024;
+
+    const contentLength = req.headers.get("content-length");
+    if (contentLength && parseInt(contentLength, 10) > MAX_BODY_SIZE) {
+      return new Response("Payload Too Large", { status: 413 });
+    }
     // const user = await prisma.user.findUnique({
     //   where: { email: email as string },
     // });
