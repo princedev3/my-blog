@@ -7,6 +7,11 @@ export const authRoutes = [
   "/confirm-email",
 ];
 
-export const privateRoutes = ["/invoices", "/invoices/:id"];
+export const privateRoutes = [
+  "/create-blog",
+  "/entertainment",
+  "/technology",
+  "/othermatter",
+];
 
 export const adminRoutes = ["/dashboard"];

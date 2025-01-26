@@ -60,6 +60,9 @@ export const UserButton = () => {
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleLogout}>Log Out</DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href={"/create-blog"}>create-blog</Link>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     );

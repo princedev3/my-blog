@@ -43,7 +43,7 @@ export default middleware(async (req) => {
     // }
 
     if (isLoggedIn && isAuthRoute) {
-      return NextResponse.redirect(new URL("/invoices", req.nextUrl));
+      return NextResponse.redirect(new URL("/", req.nextUrl));
     }
     if (isLoggedIn && Date.parse(isLoggedIn.expires) < Date.now()) {
       if (nextUrl.pathname !== "/login") {

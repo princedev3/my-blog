@@ -46,7 +46,6 @@ const ShowBlog = ({
             Date.parse(b?.createdAt || "") - Date.parse(a?.createdAt || "")
         )
         ?.map((item, index) => {
-          const imglength = item.imageUrls[0].split(`\\`);
           return (
             <div
               className=" motion-opacity-in-0 motion-translate-y-in-25 motion-blur-in-sm grid relative gap-y-6 shadow rounded-sm hover:scale-105 transition-all duration-1000 ease-in-out"
@@ -54,7 +53,7 @@ const ShowBlog = ({
             >
               <div className="relative h-[40vh] w-full ">
                 <Image
-                  src={"/" + imglength[imglength.length - 1]}
+                  src={item.imageUrls[0]}
                   fill
                   alt=""
                   className="object-cover rounded-sm "

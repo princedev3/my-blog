@@ -27,7 +27,6 @@ const SingleBlog = ({
 }) => {
   const session = useSessionStore((state) => state.session);
   const [selectedImage, setSelectedImage] = useState(0);
-  const imglength = singleblog?.imageUrls[selectedImage].split(`\\`) as [];
   const [comments, setComments] = useState<string>("");
   const pathname = usePathname();
 
@@ -61,7 +60,7 @@ const SingleBlog = ({
       <div className="grid md:grid-flow-col  md:grid-cols-[2fr_1fr]  gap-4 ">
         <div className="relative w-full  h-[52vh]">
           <Image
-            src={"/" + imglength[imglength.length - 1]}
+            src={singleblog?.imageUrls[selectedImage] as string}
             alt=""
             fill
             className="object-cover rounded-sm"
@@ -76,7 +75,7 @@ const SingleBlog = ({
               <Image
                 onClick={() => setSelectedImage(idx)}
                 key={idx}
-                src={"/" + item.split(`\\`)[imglength.length - 1]}
+                src={item}
                 alt=""
                 className="w-full h-[25vh] object-cover rounded-sm"
                 width={100}
@@ -103,7 +102,7 @@ const SingleBlog = ({
           className="flex items-center gap-1 my-2 cursor-pointer"
           onClick={handleLikeAction}
         >
-          <ThumbsUp className="w-4 h-4 text-gray-700 " />
+          <ThumbsUp className="w-4 h-4 text-gray-700 fill-black" />
           <span className="text-gray-700">{singleblog?._count.like} </span>
         </div>
         <div className="grid  gap-y-5 my-2">

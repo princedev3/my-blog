@@ -1,8 +1,15 @@
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
-import { writeFile } from "fs/promises";
 import { NextRequest, NextResponse } from "next/server";
-import { join } from "path";
+import { v2 as cloud } from "cloudinary";
+import streamifier from "streamifier";
+
+cloud.config({
+  cloud_name: "dmi0ise3n",
+  api_key: "397833361965363",
+  api_secret: "8TMN-L2OkpSDrPDlqfo_jVnToyE",
+  secure: true,
+});
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -31,13 +38,20 @@ export const POST = async (req: NextRequest) => {
         status: 500,
       });
     }
+
     const buffer: string[] = await Promise.all(
       file.map(async (item) => {
-        const bytes = await item.arrayBuffer();
-        const path = join(process.cwd(), "public", (item as File).name);
-        const buffer = Buffer.from(bytes);
-        await writeFile(path, buffer);
-        return path;
+        return new Promise(async (resolve, reject) => {
+          const bytes = Buffer.from(await item.arrayBuffer());
+          const stream = cloud.uploader.upload_stream({}, (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result?.secure_url as string);
+            }
+          });
+          streamifier.createReadStream(bytes).pipe(stream);
+        });
       })
     );
 
@@ -48,6 +62,9 @@ export const POST = async (req: NextRequest) => {
         { error: "Missing required fields" },
         { status: 400 }
       );
+    }
+    if (!buffer.length) {
+      return { error: "no image" };
     }
     await prisma.blog.create({
       data: {
