@@ -5,9 +5,9 @@ import { v2 as cloud } from "cloudinary";
 import streamifier from "streamifier";
 
 cloud.config({
-  cloud_name: "dmi0ise3n",
-  api_key: "397833361965363",
-  api_secret: "8TMN-L2OkpSDrPDlqfo_jVnToyE",
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.api_key,
+  api_secret: process.env.api_secret,
   secure: true,
 });
 
@@ -64,7 +64,7 @@ export const POST = async (req: NextRequest) => {
       );
     }
     if (!buffer.length) {
-      return { error: "no image" };
+      return NextResponse.json({ error: "no image" }, { status: 500 });
     }
     await prisma.blog.create({
       data: {
@@ -76,9 +76,8 @@ export const POST = async (req: NextRequest) => {
         imageUrls: buffer,
       },
     });
-    return NextResponse.json({ error: "can not create blog" }, { status: 200 });
+    return NextResponse.json({ success: " create blog" }, { status: 200 });
   } catch (error) {
-    console.log(error);
     return NextResponse.json({ error: "can not create blog" }, { status: 500 });
   }
 };
