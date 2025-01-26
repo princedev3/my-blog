@@ -3,7 +3,12 @@ import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloud } from "cloudinary";
 import streamifier from "streamifier";
-
+import Cors from "nextjs-cors";
+const headers = {
+  "Access-Control-Allow-Origin": "*", // Allow all origins (use specific origin in production for security)
+  "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
 cloud.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.api_key,
@@ -17,7 +22,7 @@ export const POST = async (req: NextRequest) => {
     if (!session) {
       return NextResponse.json(
         { error: "something went wrong" },
-        { status: 500 }
+        { status: 500, headers }
       );
     }
     const data = await req.formData();
@@ -60,11 +65,11 @@ export const POST = async (req: NextRequest) => {
     if (!title || !summary || !category || !desc) {
       return NextResponse.json(
         { error: "Missing required fields" },
-        { status: 400 }
+        { status: 400, headers }
       );
     }
     if (!buffer.length) {
-      return NextResponse.json({ error: "no image" }, { status: 500 });
+      return NextResponse.json({ error: "no image" }, { status: 500, headers });
     }
     await prisma.blog.create({
       data: {
@@ -76,8 +81,15 @@ export const POST = async (req: NextRequest) => {
         imageUrls: buffer,
       },
     });
-    return NextResponse.json({ success: " create blog" }, { status: 200 });
+    return NextResponse.json(
+      { success: " create blog" },
+      { status: 200, headers }
+    );
   } catch (error) {
-    return NextResponse.json({ error: "can not create blog" }, { status: 500 });
+    console.log(error);
+    return NextResponse.json(
+      { error: "can not create blog" },
+      { status: 500, headers }
+    );
   }
 };
